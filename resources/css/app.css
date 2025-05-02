@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Screen view scaling */
+/* Below is for id-card layout design */
+@media screen {
+    .id-card-container {
+        transform: scale(1.5);
+        transform-origin: center;
+        margin: 2rem auto;
+    }
+}
+
+/* Print sizing */
+@media print {
+    @page {
+        size: 85.6mm 54mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    body {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .id-card {
+        width: 85.6mm !important;
+        height: 54mm !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+}
