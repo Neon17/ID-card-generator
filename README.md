@@ -77,6 +77,25 @@ Follow these steps to set up and run the project locally.
    php artisan migrate
    ```
 
+
+---
+
+### 🔗 Storage Setup & Cache Clearing
+
+Run the following commands to properly link storage and clear any cached data:
+
+```bash
+php artisan storage:link
+php artisan optimize:clear
+php artisan cache:clear
+```
+
+Set appropriate permissions to make storage accessible:
+
+```bash
+chmod -R 775 storage/app/public
+```
+
 ---
 
 ## ✅ Features
