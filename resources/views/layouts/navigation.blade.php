@@ -25,8 +25,16 @@
                     </x-nav-link>
                 </div>
 
+
                 @if (Auth::user()->isAdmin)
-                    <!-- Navigation Links -->
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('card.details')" :active="request()->routeIs('card.details')">
+                            {{ __('Scan') }}
+                        </x-nav-link>
+                    </div>
+                @endif
+
+                @if (Auth::user()->isAdmin)
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('manage-user')" :active="request()->routeIs('manage-user')">
                             {{ __('Manage User') }}

@@ -77,26 +77,34 @@ Follow these steps to set up and run the project locally.
    php artisan migrate
    ```
 
+9. **Install QR Code Package**
+   ```bash
+   composer require simplesoftwareio/simple-qrcode
+   ```
+
+9. **🔗 Storage Setup & Cache Clearing**
+   ```bash
+   php artisan storage:link
+   php artisan optimize:clear
+   php artisan cache:clear
+   ```
+   Set appropriate permissions to make storage accessible (if required):
+
+   ```bash
+   chmod -R 775 storage/app/public
+   ```
+
+9. **Install QR Code Package**
+   ```bash
+   composer require simplesoftwareio/simple-qrcode
+   ```
+9. **Run the app**
+   ```bash
+   php artisan serve
+   ```
 
 ---
 
-### 🔗 Storage Setup & Cache Clearing
-
-Run the following commands to properly link storage and clear any cached data:
-
-```bash
-php artisan storage:link
-php artisan optimize:clear
-php artisan cache:clear
-```
-
-Set appropriate permissions to make storage accessible:
-
-```bash
-chmod -R 775 storage/app/public
-```
-
----
 
 ## ✅ Features
 

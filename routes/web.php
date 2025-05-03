@@ -34,6 +34,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile/update-dob', [UserController::class, 'updateDOB'])->name('profile.updateDOB');
     Route::patch('/profile/update-photo', [UserController::class, 'updatePhoto'])->name('profile.updatePhoto');
 
+    // Generate QR Code
+    Route::get('/generate-qrcode', [IDCardController::class, 'generateQR'])->name('generate.qrcode');
+
+    // Scan QR Code
+    Route::get('/scan-qrcode', [IDCardController::class, 'scanQR'])->name('scan.qrcode');
+    Route::get('/validate-qrcode', [IDCardController::class, 'validateQR'])->name('validate.qrcode');
+
+    Route::get('/cards', [IDCardController::class, 'show'])->name('card.details');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
