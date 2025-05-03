@@ -56,13 +56,13 @@
 
                     <!-- Employee Photo -->
                     <div class="w-16 h-16 rounded border-2 border-white shadow-sm overflow-hidden">
-                        <img src="{{ $employee['photo'] }}" class="w-full h-full object-cover" alt="Employee Photo">
+                        <img src="{{ $user['photo'] }}" class="w-full h-full object-cover" alt="Employee Photo">
                     </div>
 
                     <!-- Barcode -->
                     <div class="w-full px-1">
                         <div class="h-6 bg-white/90 rounded-sm flex items-center justify-center">
-                            <span class="text-[5px] font-mono tracking-tighter">{{ $employee['barcode'] }}</span>
+                            <span class="text-[5px] font-mono tracking-tighter">{{ $user['barcode'] }}</span>
                         </div>
                     </div>
                 </div>
@@ -79,27 +79,27 @@
                     <div class="space-y-0.5">
                         <div>
                             <p class="text-[5px] text-gray-500">Full Name</p>
-                            <p class="text-[7px] font-bold">{{ $employee['full_name'] }}</p>
+                            <p class="text-[7px] font-bold">{{ $user['full_name'] }}</p>
                         </div>
                         <div class="grid grid-cols-2 gap-x-2">
                             <div>
                                 <p class="text-[5px] text-gray-500">ID</p>
-                                <p class="text-[6px] font-mono text-blue-700">{{ $employee['id_number'] }}</p>
+                                <p class="text-[6px] font-mono text-blue-700">{{ $user['id_number'] }}</p>
                             </div>
                             <div>
                                 <p class="text-[5px] text-gray-500">Department</p>
-                                <p class="text-[6px] font-semibold">{{ $employee['department'] }}</p>
+                                <p class="text-[6px] font-semibold">{{ $user['department'] }}</p>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-2 gap-x-2">
                             <div>
                                 <p class="text-[5px] text-gray-500">Date of Birth</p>
-                                <p class="text-[6px] font-semibold">{{ $employee['dob'] }}</p>
+                                <p class="text-[6px] font-semibold">{{ $user['dob'] }}</p>
                             </div>
                             <div>
                                 <p class="text-[5px] text-gray-500">Address</p>
-                                <p class="text-[6px] font-mono text-blue-700">{{ $employee['address'] }}</p>
+                                <p class="text-[6px] font-mono text-blue-700">{{ $user['address'] }}</p>
                             </div>
                         </div>
                     </div>
@@ -108,11 +108,11 @@
                     <div class="mt-1 border-t border-gray-200 pt-0.5">
                         <div class="flex justify-between items-center">
                             <div class="text-[5px] text-gray-600">
-                                Valid: {{ $employee["valid_from"] }} - {{ $employee["valid_to"] }}
+                                Valid: {{ $user["valid_from"] }} - {{ $user["valid_to"] }}
                             </div>
                             <!-- QR Code -->
                             <div class="w-10 h-10 p-0.5 bg-white border border-gray-200 rounded-sm">
-                                <img src="{{ $employee['qr_code'] }}" class="w-full h-full" alt="QR Code">
+                                <img src="{{ $user['qr_code'] }}" class="w-full h-full" alt="QR Code">
                             </div>
                         </div>
                     </div>

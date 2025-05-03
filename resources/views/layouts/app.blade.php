@@ -24,7 +24,7 @@
     <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
         @include('layouts.navigation')
 
-        <div class="fixed inset-0 flex items-start justify-end px-4 py-6 pointer-events-none sm:p-6 z-50">
+        <div class="fixed inset-0 flex items-start justify-end mt-8 px-4 py-6 pointer-events-none sm:p-6 z-50">
             <div class="space-y-4 w-full sm:max-w-sm">
                 @if (session()->has('flash_notification'))
                     @foreach (session('flash_notification') as $flash)

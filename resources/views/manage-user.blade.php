@@ -52,7 +52,10 @@
                                         {{ $user->department }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $user->photo }}
+                                        <div class="w-16 h-16 rounded border-2 border-white shadow-sm overflow-hidden">
+                                            <img src="{{ asset('storage/photos/' . auth()->user()->photo) }}"
+                                                class="w-full h-full object-cover" alt="Employee Photo">
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach

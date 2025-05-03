@@ -36,7 +36,7 @@
 
                                 <!-- Employee Photo -->
                                 <div class="w-16 h-16 rounded border-2 border-white shadow-sm overflow-hidden">
-                                    <img src="" class="w-full h-full object-cover" alt="Employee Photo">
+                                    <img src="{{ asset('storage/photos/'.auth()->user()->photo) }}" class="w-full h-full object-cover" alt="Employee Photo">
                                 </div>
 
                                 <!-- Barcode -->

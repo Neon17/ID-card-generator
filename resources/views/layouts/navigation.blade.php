@@ -46,7 +46,7 @@
                             <div class="flex items-center">
                                 @if(auth()->user()->photo)
                                   <img 
-                                    src="{{ asset('photos/'.auth()->user()->photo) }}" 
+                                    src="{{ asset('storage/photos/'.auth()->user()->photo) }}" 
                                     alt="Profile"
                                     class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-600"
                                   >

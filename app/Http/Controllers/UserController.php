@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
     //
-    public function manageUser(Request $request){
+    public function manageUser(Request $request)
+    {
         $users = User::where('isAdmin', false)->get();
-
         return view('manage-user', compact('users'));
     }
 
@@ -52,26 +54,47 @@ class UserController extends Controller
 
     public function updatePhoto(Request $request)
     {
-        if ($request->photo == null){
+        // Custom validation
+        $validator = Validator::make($request->all(), [
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ], [
+            'photo.required' => 'Please select a photo to upload',
+            'photo.image' => 'The file must be an image',
+            'photo.mimes' => 'Only JPEG, PNG, and JPG images are allowed',
+            'photo.max' => 'The image must not exceed 2MB',
+        ]);
+
+        if ($validator->fails()) {
             return redirect()->route('profile.edit')->with('flash_notification', [
                 [
                     'level' => 'error',
-                    'message' => 'Please put profile photo to update',
-                    'title' => 'Failed!'
+                    'message' => $validator->errors()->first('photo'),
+                    'title' => 'Validation Failed!'
                 ]
-            ]);   
+            ]);
         }
-        $request->validate([
-            'photo' => 'image|mimes:jpeg,png,jpg|max:2048', //max 2MB
-        ]);
 
         $user = User::where('id', Auth::user()->id)->first();
 
         $extension = $request->file('photo')->extension();
         $filename = 'user_' . $user->id . '_' . time() . '.' . $extension;
 
-        // Store file (in storage/app/public/photos)
-        $request->file('photo')->storeAs('photos', $filename, 'public');
+        // Delete old photo if exists
+        if ($user->photo && Storage::disk('public')->exists('photos/' . $user->photo)) {
+            Storage::disk('public')->delete('photos/' . $user->photo);
+        }
+
+        // Store photo (in storage/app/public/photos) with explicit public visibility
+        $path = $request->file('photo')->storeAs(
+            'photos',
+            $filename,
+            ['disk' => 'public', 'visibility' => 'public']
+        );
+
+        // 4. Storage Verification
+        if (!Storage::disk('public')->exists($path)) {
+            throw new \Exception("Failed to store file at: $path");
+        }
 
         $user->photo = $filename;
         $user->update();

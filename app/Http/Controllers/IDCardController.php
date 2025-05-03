@@ -27,8 +27,8 @@ class IDCardController extends Controller
 
         $id = 'ACME-2025-'.strval($user->id);
 
-        $employee = [
-            'photo' => asset(`storage/employees/` + $user->photo),
+        $user = [
+            'photo' => asset('storage/photos/' . $user->photo),
             'full_name' => $user->name,
             'id_number' => $id,
             'department' => $user->department,
@@ -37,9 +37,9 @@ class IDCardController extends Controller
             'valid_from' => now()->format('M Y'),
             'valid_to' => now()->addYears(2)->format('M Y'),
             'barcode' => 'EMP-0567-2024',
-            'qr_code' => asset('storage/employees/qr-codes/john.png')
+            'qr_code' => asset('storage/photos/qr-codes/john.png')
         ];
 
-        return view('print-id-card', ['employee' => $employee]);
+        return view('print-id-card', ['user' => $user]);
     }
 }
