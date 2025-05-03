@@ -15,6 +15,7 @@
 
         <div>
             <x-input-label for="update_photo" :value="__('Upload New Photo')" />
+            <img src="{{ asset('storage/photos/'. $photo)}}" class="w-20 h-full object-cover" alt="Employee Photo">
             <x-text-input id="update_photo" name="photo" type="file" class="mt-1 block w-full" />
         </div>
 

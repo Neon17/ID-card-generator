@@ -14,8 +14,8 @@
         @method('patch')
 
         <div>
-            <x-input-label for="department" :value="__('Department')" />
-            <x-text-input id="department" name="department" type="text" value={{$department}} class="mt-1 block w-full" />
+            <x-input-label for="update_department" :value="__('Department')" />
+            <x-text-input id="update_department" name="department" type="text" value={{$department}} class="mt-1 block w-full" />
         </div>
 
         <div class="flex items-center gap-4">

@@ -19,8 +19,16 @@ class UserController extends Controller
 
     public function updateDepartment(Request $request)
     {
-        if ($request->department == null)
-            return redirect(route('profile.edit'));
+        if ($request->department == null) {
+            return redirect()->route('profile.edit', ['#container_update_address'])->with('flash_notification', [
+                [
+                    'level' => 'error',
+                    'message' => 'Please enter the department to update!',
+                    'title' => 'Incomplete!'
+                ]
+            ]);
+        }
+        return redirect(route('profile.edit'));
 
         $user = User::where('id', Auth::user()->id)->first();
         $user->department = $request->department;
@@ -37,8 +45,15 @@ class UserController extends Controller
 
     public function updateDOB(Request $request)
     {
-        if ($request->dob == null)
-            return redirect(route('profile.edit'));
+        if ($request->dob == null){
+            return redirect()->route('profile.edit', ['#container_update_dob'])->with('flash_notification', [
+                [
+                    'level' => 'error',
+                    'message' => 'Please enter the date of birth to update!',
+                    'title' => 'Incomplete!'
+                ]
+            ]);
+        }
         $user = User::where('id', Auth::user()->id)->first();
         $user->dob = $request->dob;
         $user->update();
@@ -65,7 +80,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('profile.edit')->with('flash_notification', [
+            return redirect()->route('profile.edit', ['#container_update_photo'])->with('flash_notification', [
                 [
                     'level' => 'error',
                     'message' => $validator->errors()->first('photo'),
@@ -111,11 +126,17 @@ class UserController extends Controller
     public function updateAddress(Request $request)
     {
         if ($request->address == null)
-            return redirect(route('profile.edit'));
+            return redirect(route('profile.edit'), ['#container_update_department'])->with('flash_notification', [
+                [
+                    'level' => 'error',
+                    'message' => 'Please enter the address to update!',
+                    'title' => 'Incomplete!',
+                ]
+            ]);
         $user = User::where('id', Auth::user()->id)->first();
         $user->address = $request->address;
         $user->update();
-       
+
         return redirect()->route('profile.edit')->with('flash_notification', [
             [
                 'level' => 'success',
