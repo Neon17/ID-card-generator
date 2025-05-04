@@ -25,7 +25,6 @@
                     </x-nav-link>
                 </div>
 
-
                 @if (Auth::user()->isAdmin)
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('card.details')" :active="request()->routeIs('card.details')">
@@ -41,6 +40,14 @@
                         </x-nav-link>
                     </div>
                 @endif
+
+                @if (Auth::user()->isAdmin)
+                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                        <x-nav-link :href="route('get-card-requests')" :active="request()->routeIs('get-card-requests')">
+                            {{ __('Card Requests') }}
+                        </x-nav-link>
+                    </div>
+                @endif
             </div>
 
             <!-- Settings Dropdown -->
@@ -52,18 +59,16 @@
                             {{-- <div>{{  || Auth::user()->name }}</div> --}}
 
                             <div class="flex items-center">
-                                @if(auth()->user()->photo)
-                                  <img 
-                                    src="{{ asset('storage/photos/'.auth()->user()->photo) }}" 
-                                    alt="Profile"
-                                    class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-600"
-                                  >
+                                @if (auth()->user()->photo)
+                                    <img src="{{ asset('storage/photos/' . auth()->user()->photo) }}" alt="Profile"
+                                        class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-600">
                                 @else
-                                  <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold">
-                                    {{ Auth::user()->name }}
-                                  </div>
+                                    <div
+                                        class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-xs font-bold">
+                                        {{ Auth::user()->name }}
+                                    </div>
                                 @endif
-                              </div>
+                            </div>
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"

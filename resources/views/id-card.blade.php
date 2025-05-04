@@ -11,13 +11,27 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg flex justify-center p-2">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                    <!-- Print Button -->
-                    <a href="{{ route('print-id-card') }}"
-                        class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 print:hidden">
-                        Print your ID Card
-                    </a>
+                    <!-- Print or Apply Button -->
+                    @if (!auth()->user()->isAdmin && auth()->user()->card_approve_status !== 'approved')
+                        @if (auth()->user()->card_approve_status != 'approved' && auth()->user()->card_apply_status != 'applied')
+                            <a href="{{ route('apply-for-card') }}"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 print:hidden">
+                                Apply for Card
+                            </a>
+                        @else
+                            <a href="#"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 print:hidden">
+                                Wait for the approval of admin
+                            </a>
+                        @endif
+                    @else
+                        <a href="{{ route('print-id-card') }}"
+                            class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 print:hidden">
+                            Print your Card
+                        </a>
+                    @endif
                     <div class="text-white p-2">
-                        Note: You have to fill all the details in your profile to print your ID Card
+                        Note: You have to fill all the details in your profile to apply and print your ID Card
                     </div>
                     <div
                         class="mt-4 id-card w-[85.6mm] h-[54mm] bg-white rounded-lg shadow-xl overflow-hidden relative border-2 border-gray-200">
@@ -185,111 +199,125 @@
 
             </div>
 
-            <div class="mt-2 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg flex justify-center p-2">
-                <div class="p-6 w-full h-full text-gray-900 dark:text-gray-100">
+            @if (auth()->user()->isAdmin)
+                <div
+                    class="mt-2 bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg flex justify-center p-2">
+                    <div class="p-6 w-full h-full text-gray-900 dark:text-gray-100">
 
-                    <h2 class="font-semibold text-xl mb-5 text-gray-800 dark:text-gray-200 leading-tight">
-                        {{ __('Edit Card Details') }}
-                    </h2>
+                        <h2 class="font-semibold text-xl mb-5 text-gray-800 dark:text-gray-200 leading-tight">
+                            {{ __('Edit Card Details') }}
+                        </h2>
 
-                    <div class="form-group w-full min-h-[300px] grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <form action="/update-card-details" method="POST">
-                            @csrf
-                            @method('PUT')
+                        <div class="form-group w-full min-h-[300px] grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <form action="/update-card-details" method="POST">
+                                @csrf
+                                @method('PUT')
 
 
-                            <div class="card-detail-container w-full p-2">
-                                <label for="name"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Card
-                                    Logo</label>
-                                <input type="file" id="card_logo" name="name"
-                                    class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light" />
-                            </div>
+                                <div class="card-detail-container w-full p-2">
+                                    <label for="name"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Card
+                                        Logo</label>
+                                    <input type="file" id="card_logo" name="name"
+                                        class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light" />
+                                </div>
 
-                            <div class="card-detail-container w-full flex flex-col p-2">
-                                <label for="name"
-                                    class="block mb-3 text-sm font-medium text-gray-900 dark:text-white">What to
-                                    include in QR code of ID Card?</label>
+                                <div class="card-detail-container w-full flex flex-col p-2">
+                                    <label for="name"
+                                        class="block mb-3 text-sm font-medium text-gray-900 dark:text-white">What to
+                                        include in QR code of ID Card?</label>
 
-                                <div class="items-container">
+                                    <div class="items-container">
 
-                                    <div class="flex items-center">
-                                        <input hidden checked id="hidden-checked-checkbox" name="select_id" type="checkbox"
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="hidden-checked-checkbox"
-                                            class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Id</label>
+                                        <div class="flex items-center">
+                                            <input hidden checked id="hidden-checked-checkbox" name="select_id"
+                                                type="checkbox"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="hidden-checked-checkbox"
+                                                class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Id</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input id="checkbox" name="select_name" type="checkbox"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="checkbox"
+                                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Name</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input id="checkbox" name="select_company_name" type="checkbox"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="checkbox"
+                                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Company
+                                                Name</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input id="checkbox" name="select_expiry_date" type="checkbox"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="checkbox"
+                                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Expiry
+                                                Date</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input id="checkbox" name="select_email" type="checkbox"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="checkbox"
+                                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Email</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input id="checkbox" name="select_address" type="checkbox"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="checkbox"
+                                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Address</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input id="checkbox" name="select_department" type="checkbox"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="checkbox"
+                                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Department</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input id="checkbox" name="select_dob" type="checkbox"
+                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="checkbox"
+                                                class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Date
+                                                of
+                                                Birth</label>
+                                        </div>
                                     </div>
-                                    <div class="flex items-center">
-                                        <input id="checkbox" name="select_name" type="checkbox"
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="checkbox"
-                                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Name</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input id="checkbox" name="select_company_name" type="checkbox"
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="checkbox"
-                                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Company
-                                            Name</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input id="checkbox" name="select_expiry_date" type="checkbox"
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="checkbox"
-                                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Expiry
-                                            Date</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input id="checkbox" name="select_email" type="checkbox"
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="checkbox"
-                                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Email</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input id="checkbox" name="select_address" type="checkbox"
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="checkbox"
-                                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Address</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input id="checkbox" name="select_department" type="checkbox"
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="checkbox"
-                                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Department</label>
-                                    </div>
-                                    <div class="flex items-center">
-                                        <input id="checkbox" name="select_dob" type="checkbox"
-                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                        <label for="checkbox"
-                                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Date of
-                                            Birth</label>
-                                    </div>
+
 
                                 </div>
 
+                                {{-- card custom message will open when user ticks custom message --}}
+                                <div class="card-detail-container w-full p-2">
+                                    <label for="name"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        Custom Message to be placed in QR code (if required)</label>
+                                    <input type="text" id="card_logo" name="card_custom_message"
+                                        class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light" />
+                                </div>
 
-                            </div>
+                                <div class="card-detail-container w-full p-2">
+                                    <label for="name"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Card
+                                        Expiry Date</label>
+                                    <input type="date" id="card_logo" name="card_expiry_date"
+                                        class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light" />
+                                </div>
 
-                            <div class="card-detail-container w-full p-2">
-                                <label for="name"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Card
-                                    Expiry Date</label>
-                                <input type="date" id="card_logo" name="card_expiry_date"
-                                    class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light" />
-                            </div>
 
-                            <button type="submit"
-                                class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 print:hidden mt-2">
-                                Save Changes
-                            </button>
+                                <button type="submit"
+                                    class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg hover:bg-blue-700 print:hidden mt-2">
+                                    Save Changes
+                                </button>
 
-                        </form>
+                            </form>
 
+
+                        </div>
 
                     </div>
-
                 </div>
-            </div>
+            @endif
 
         </div>
     </div>

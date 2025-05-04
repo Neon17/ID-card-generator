@@ -26,7 +26,9 @@ class User extends Authenticatable
         'address',
         'photo',
         'dob',
-        'department'
+        'department',
+        'card_approve_status',
+        'card_apply_status',
     ];
 
     /**

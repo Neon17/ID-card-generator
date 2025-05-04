@@ -16,10 +16,16 @@ class isAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->isAdmin) {
+        if (Auth::user()->isAdmin) {
             return $next($request);
-        } else {
-            return redirect()->route('dashboard')->with('error', 'Access denied. Admins only.');
         }
+        session()->flash('flash_notification', [
+            [
+                'level' => 'error',
+                'message' => 'Admin can only access this page',
+                'title' => 'Access Denied',
+            ]
+        ]);
+        return redirect()->route('dashboard');
     }
 }

@@ -47,22 +47,12 @@ Follow these steps to set up and run the project locally.
 3. **Install PHP dependencies**
    ```bash
    composer install
+   composer update
    ```
 
 4. **Generate application key**
    ```bash
    php artisan key:generate
-   ```
-
-5. **Install Laravel Breeze (for scaffolding)**
-   ```bash
-   php artisan breeze:install
-   ```
-
-6. **Install Toast Flash package**
-   ```bash
-   composer require laracasts/flash
-   php artisan vendor:publish --provider="Laracasts\Flash\FlashServiceProvider" --force
    ```
 
 7. **Run npm and build assets**
@@ -77,11 +67,6 @@ Follow these steps to set up and run the project locally.
    php artisan migrate
    ```
 
-9. **Install QR Code Package**
-   ```bash
-   composer require simplesoftwareio/simple-qrcode
-   ```
-
 9. **🔗 Storage Setup & Cache Clearing**
    ```bash
    php artisan storage:link
@@ -94,10 +79,6 @@ Follow these steps to set up and run the project locally.
    chmod -R 775 storage/app/public
    ```
 
-9. **Install QR Code Package**
-   ```bash
-   composer require simplesoftwareio/simple-qrcode
-   ```
 9. **Run the app**
    ```bash
    php artisan serve
@@ -108,7 +89,7 @@ Follow these steps to set up and run the project locally.
 
 ## ✅ Features
 
-- Admin panel to manage users
+- Admin panel to manage users and ID requests
 - Dynamic ID card generation
 - Print-ready design
 - Laravel Breeze auth system
