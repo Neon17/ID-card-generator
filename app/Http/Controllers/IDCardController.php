@@ -49,6 +49,9 @@ class IDCardController extends Controller
             }
         }
 
+        // Convert QR code to base64 for embedding in HTML
+        $qrCode = base64_encode($this->generateQR());
+
         $id = 'ACME-2025-' . strval($user->id);
 
         $user = [
@@ -61,7 +64,7 @@ class IDCardController extends Controller
             'valid_from' => now()->format('M Y'),
             'valid_to' => now()->addYears(2)->format('M Y'),
             'barcode' => 'EMP-0567-2024',
-            'qr_code' => asset('storage/photos/qr-codes/john.png')
+            'qr_code' => $qrCode,
         ];
 
         return view('print-id-card', ['user' => $user]);
@@ -123,7 +126,8 @@ class IDCardController extends Controller
             ->color(0, 0, 0)
             ->generate(json_encode($data));
 
-        return view('generate-qrcode', compact('qrCode'));
+        return $qrCode;
+        // return view('generate-qrcode', compact('qrCode'));
     }
     public function scanQR()
     {
