@@ -7,25 +7,46 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 
 class IDCardController extends Controller
 {
     //
     //
-    public function printIDCard()
+    public function generateIDCard(Request $request)
     {
-        $user = User::where('id', Auth::user()->id)->first();
-
-        if ($user->name == null || $user->department == null || $user->dob == null || $user->address == null) {
+        if ($request->name == null || $request->department == null || $request->dob == null || $request->address == null) {
             session()->flash('flash_notification', [
                 [
                     'level' => 'error',
-                    'message' => 'Please fill all details in profile except photo to get ID Card!',
+                    'message' => 'Please fill all details to get ID Card',
                     'title' => 'Incomplete Profile',
                 ]
             ]);
             return back();
+        }
+
+
+        return "Currently working on this feature and will be available for admin only on next update!";
+    }
+
+    public function printIDCard()
+    {
+        $user = User::where('id', Auth::user()->id)->first();
+
+        if (!$user->isAdmin) {
+            if ($user->name == null || $user->department == null || $user->dob == null || $user->address == null) {
+                session()->flash('flash_notification', [
+                    [
+                        'level' => 'error',
+                        'message' => 'Please fill all details in profile except photo to get ID Card or contact admin!',
+                        'title' => 'Incomplete Profile',
+                    ]
+                ]);
+                return back();
+            }
         }
 
         $id = 'ACME-2025-' . strval($user->id);

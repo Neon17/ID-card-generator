@@ -115,12 +115,13 @@
                     <div class="flex">
 
 
-                        <form class="max-w-sm mx-auto mt-3 border p-4">
+                        <form action="{{route('generate-id-card')}}" class="max-w-sm mx-auto mt-3 border p-4" method="POST">
+                            @csrf
                             <div class="mb-5 mt-1">
                                 <label for="name"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Full Name</label>
-                                <input type="text" id="name"
+                                <input type="text" id="name" name="name"
                                     class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
                                     equired />
                             </div>
@@ -128,7 +129,7 @@
                                 <label for="address"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Address</label>
-                                <input type="text" id="address"
+                                <input type="text" id="address" name="address"
                                     class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
                                     required />
                             </div>
@@ -136,7 +137,7 @@
                                 <label for="dob"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     DOB</label>
-                                <input type="date" id="dob"
+                                <input type="date" id="dob" name="dob"
                                     class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
                                     required />
                             </div>
@@ -144,7 +145,7 @@
                                 <label for="department"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Department</label>
-                                <input type="text" id="department"
+                                <input type="text" id="department" name="department"
                                     class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
                                     required />
                             </div>
@@ -152,7 +153,7 @@
                                 <label for="name"
                                     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Upload photo</label>
-                                <input type="file" id="name"
+                                <input type="file" id="name" name="photo"
                                     class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
                                     equired />
                             </div>

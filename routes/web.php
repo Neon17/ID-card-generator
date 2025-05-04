@@ -42,6 +42,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/validate-qrcode', [IDCardController::class, 'validateQR'])->name('validate.qrcode');
 
     Route::get('/cards', [IDCardController::class, 'show'])->name('card.details');
+
+    //Generate ID Card
+    Route::post('/generate-id-card', [IDCardController::class, 'generateIDCard'])->name('generate-id-card');
 });
 
 require __DIR__ . '/auth.php';

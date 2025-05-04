@@ -28,7 +28,6 @@ class UserController extends Controller
                 ]
             ]);
         }
-        return redirect(route('profile.edit'));
 
         $user = User::where('id', Auth::user()->id)->first();
         $user->department = $request->department;
