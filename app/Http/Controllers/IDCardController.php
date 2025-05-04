@@ -27,9 +27,12 @@ class IDCardController extends Controller
             ]);
             return back();
         }
+        return view('currently_working');
+    }
 
-
-        return "Currently working on this feature and will be available for admin only on next update!";
+    public function updateCard(Request $request)
+    {
+        return view('currently_working');
     }
 
     public function printIDCard()

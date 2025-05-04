@@ -45,6 +45,9 @@ Route::middleware('auth')->group(function () {
 
     //Generate ID Card
     Route::post('/generate-id-card', [IDCardController::class, 'generateIDCard'])->name('generate-id-card');
+
+    //Update Card Details
+    Route::put('/update-card-details', [IDCardController::class, 'updateCard'])->name('update-card');
 });
 
 require __DIR__ . '/auth.php';
