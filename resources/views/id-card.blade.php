@@ -132,7 +132,7 @@
 
 
                         <form action="{{ route('generate-id-card') }}" class="max-w-sm mx-auto mt-3 border p-4"
-                            method="POST">
+                            method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="mb-5 mt-1">
                                 <label for="name"
@@ -141,6 +141,9 @@
                                 <input type="text" id="name" name="name"
                                     class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
                                     equired />
+                                @error('name')
+                                    <div class="text-red-500">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-5 mt-1">
                                 <label for="address"
@@ -149,6 +152,9 @@
                                 <input type="text" id="address" name="address"
                                     class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
                                     required />
+                                @error('address')
+                                    <div class="text-red-500">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-5 mt-1">
                                 <label for="dob"
@@ -157,6 +163,9 @@
                                 <input type="date" id="dob" name="dob"
                                     class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
                                     required />
+                                @error('dob')
+                                    <div class="text-red-500">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-5 mt-1">
                                 <label for="department"
@@ -165,6 +174,9 @@
                                 <input type="text" id="department" name="department"
                                     class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
                                     required />
+                                @error('department')
+                                    <div class="text-red-500">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-5 mt-1">
                                 <label for="name"
@@ -173,6 +185,9 @@
                                 <input type="file" id="name" name="photo"
                                     class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light"
                                     equired />
+                                @error('photo')
+                                    <div class="text-red-500">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="flex items-start mb-5 mt-2">
                                 <div class="flex items-center h-5">
@@ -209,20 +224,45 @@
                         </h2>
 
                         <div class="form-group w-full min-h-[300px] grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <form action="/update-card-details" method="POST">
+                            <form action="/update-card-details" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
 
 
                                 <div class="card-detail-container w-full p-2">
                                     <label for="name"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Card
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Company
                                         Logo</label>
-                                    <input type="file" id="card_logo" name="name"
+                                    <input type="file" id="card_logo" name="card_company_logo"
                                         class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light" />
+                                    @error('card_company_logo')
+                                        <div class="text-red-500">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
-                                <div class="card-detail-container w-full flex flex-col p-2">
+                                <div class="card-detail-container w-full p-2">
+                                    <label for="name"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        Company Name</label>
+                                    <input type="text" id="card_logo" name="card_company_name"
+                                        class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light" />
+                                    @error('card_company_name')
+                                        <div class="text-red-500">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="card-detail-container w-full p-2">
+                                    <label for="name"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        Company Type (e.g. Authorized Employee Identification)</label>
+                                    <input type="text" id="card_logo" name="card_company_type"
+                                        class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light" />
+                                    @error('card_company_type')
+                                        <div class="text-red-500">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                {{-- <div class="card-detail-container w-full flex flex-col p-2">
                                     <label for="name"
                                         class="block mb-3 text-sm font-medium text-gray-900 dark:text-white">What to
                                         include in QR code of ID Card?</label>
@@ -285,7 +325,7 @@
                                     </div>
 
 
-                                </div>
+                                </div> --}}
 
                                 {{-- card custom message will open when user ticks custom message --}}
                                 <div class="card-detail-container w-full p-2">
@@ -299,9 +339,12 @@
                                 <div class="card-detail-container w-full p-2">
                                     <label for="name"
                                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Card
-                                        Expiry Date</label>
-                                    <input type="date" id="card_logo" name="card_expiry_date"
+                                        Duration in Years</label>
+                                    <input type="number" id="card_logo" name="card_duration"
                                         class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-xs-light" />
+                                    @error('card_duration')
+                                        <div class="text-red-500">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
 

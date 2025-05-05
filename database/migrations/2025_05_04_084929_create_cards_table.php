@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('approve_status')->default('active');
             $table->date('approve_date')->nullable();
             $table->string('approve_by')->nullable();
-            $table->float('duration_in_years')->default('3')->nullable();
+            $table->float('duration_in_years')->default('5')->nullable();
             $table->string('message')->nullable();
             $table->string('message_by_admin')->nullable();
             $table->timestamps();

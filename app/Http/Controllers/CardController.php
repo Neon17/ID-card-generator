@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Card;
+use App\Models\CardInfo;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,22 +19,143 @@ class CardController extends Controller
     //
     public function generateCard(Request $request)
     {
-        if ($request->name == null || $request->department == null || $request->dob == null || $request->address == null) {
-            session()->flash('flash_notification', [
-                [
-                    'level' => 'error',
-                    'message' => 'Please fill all details to get ID Card',
-                    'title' => 'Incomplete Profile',
-                ]
-            ]);
-            return back();
-        }
+        //This function is used to generate the card for any person by admin
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'department' => 'required|string|max:255',
+            'dob' => 'required|date',
+            'photo' => 'required|max:2048', // 2MB max
+        ]);
+
+        $photo = $request->file('photo');
+        $extension = $photo->getClientOriginalExtension();
+        $randomName = Str::random(10) . '_' . time() . '.' . $extension;
+
+        $photo->storeAs('tmp', $randomName, 'public'); 
+
+        return $this->printCardAnonymous([
+            'name' => $request->name,
+            'address' => $request->address,
+            'department' => $request->department,
+            'dob' => $request->dob,
+            'photo' => asset('storage/tmp/' . $randomName),
+        ]);
+
         return view('currently_working');
     }
 
     public function updateCard(Request $request)
     {
-        return view('currently_working');
+        $request->validate([
+            'card_company_name' => 'required|string|max:255',
+            'card_company_type' => 'required|string|max:255',
+            'card_company_logo' => 'required|max:2048', // 2MB max
+            'card_duration' => 'required|integer|min:1|max:10',
+        ]);
+
+        $cardInfo = CardInfo::orderBy('created_at', 'desc')->first();
+
+        $companyName = $request->card_company_name;
+        $firstName = explode(' ', trim($companyName))[0];
+
+        $minutesSinceMidnight = (int) now()->diffInMinutes(now()->copy()->startOfDay());
+        $minutesSinceMidnight = ($minutesSinceMidnight < 0) ? (-1) * $minutesSinceMidnight : $minutesSinceMidnight;
+
+        $fileExtension = $request->file('card_company_logo')->extension();
+        $newFilename = strtolower("{$firstName}_{$minutesSinceMidnight}.{$fileExtension}");
+
+        $cardInfo = CardInfo::first();
+        if ($cardInfo && $cardInfo->company_logo) {
+            $oldLogoPath = str_replace('/storage', 'public', $cardInfo->company_logo);
+            Storage::delete($oldLogoPath);
+        }
+
+        $request->file('card_company_logo')->storeAs(
+            'public/logos',
+            $newFilename
+        );
+
+        $cardInfo = new CardInfo();
+        $cardInfo->company_name = $request->card_company_name;
+        $cardInfo->company_type = $request->card_company_type;
+        $cardInfo->company_logo = $newFilename;
+        $cardInfo->card_duration = $request->card_duration;
+        $cardInfo->save();
+        session()->flash('flash_notification', [
+            [
+                'level' => 'success',
+                'message' => 'Successfully updated card information!',
+                'title' => 'Done!',
+            ]
+        ]);
+        return redirect()->route('id-card');
+    }
+
+    public function basicCardDetails()
+    {
+        //This function is used to show basic card information
+        //Like Company Name, Company Type, Card Duration, Company Logo
+
+        $cardInfo = CardInfo::orderBy('created_at', 'desc')->first();
+        if ($cardInfo) {
+            return [
+                'company_name' => $cardInfo->company_name,
+                'company_type' => $cardInfo->company_type,
+                'card_duration' => $cardInfo->card_duration,
+                'company_logo' => ($cardInfo->company_logo != null) ? $cardInfo->company_logo : null,
+            ];
+        } else {
+            $newCardInfo = new CardInfo();
+            $newCardInfo->company_name = 'ACME CORPORATION';
+            $newCardInfo->company_type = 'Authorized Employee Identification';
+            $newCardInfo->card_duration = 5;
+            $newCardInfo->save();
+
+            return [
+                'company_name' => 'ACME CORPORATION',
+                'company_type' => 'Authorized Employee Identification',
+                'card_duration' => 5,
+                'company_logo' => null,
+            ];
+        }
+        return $cardInfo;
+    }
+
+    public function printCardAnonymous($user)
+    {
+        //It is used for printing others card by admin
+        //Id is provided as Guest+Timestamp
+
+        $cardDetails =  $this->basicCardDetails();
+
+
+        // Convert QR code to base64 for embedding in HTML
+        $rawQRCode = $this->generateQR();
+        $qrCode = $this->transformQR($rawQRCode);
+
+        $id = 'ACME-2025' . (int) now()->diffInMinutes(now()->copy()->startOfDay());
+        $duration = ($cardDetails['card_duration']) ? $cardDetails['card_duration'] : 5;
+
+        $user = [
+            'name' => $user['name'],
+            'company_name' => $cardDetails['company_name'],
+            'company_type' => $cardDetails['company_type'],
+            'company_logo' => $cardDetails['company_logo'],
+            'photo' => $user['photo'],
+            'full_name' => $user['name'],
+            'id_number' => $id,
+            'department' => $user['department'],
+            'dob' => $user['dob'],
+            'address' => $user['address'],
+            'valid_from' => now()->format('M Y'),
+            'valid_to' => now()->addYears($duration)->format('M Y'),
+            'barcode' => 'EMP-0567-2024',
+            'qr_code' => $qrCode,
+        ];
+
+        return view('print-id-card', ['user' => $user]);
     }
 
     public function applyForCard()
@@ -64,7 +186,7 @@ class CardController extends Controller
             $card->formatted_dob = $card->dob->format('Y m d');
             return $card;
         });
-        
+
         return view('card-requests', ['cards' => $cards]);
     }
 
@@ -122,7 +244,7 @@ class CardController extends Controller
         $user->card_apply_status = 'applied';
         $user->update();
 
-        $card = Card::where('user_id',Auth::user()->id)->delete();
+        $card = Card::where('user_id', Auth::user()->id)->delete();
 
         $card = new Card();
         $card->name = Auth::user()->name;
@@ -202,6 +324,8 @@ class CardController extends Controller
             return redirect(route('id-card'));
         }
 
+        $card = Card::where('user_id', Auth::user()->id)->first();
+
         // Convert QR code to base64 for embedding in HTML
         $rawQRCode = $this->generateQR();
         $qrCode = $this->transformQR($rawQRCode);
@@ -209,6 +333,10 @@ class CardController extends Controller
         $id = 'ACME-2025-' . strval($user->id);
 
         $user = [
+            'name' => $user->name,
+            'company_name' => $card->company_name,
+            'company_type' => $card->company_type,
+            'company_logo' => $card->company_logo,
             'photo' => asset('storage/photos/' . $user->photo),
             'full_name' => $user->name,
             'id_number' => $id,
@@ -270,8 +398,11 @@ class CardController extends Controller
         return base64_encode($qr);
     }
 
-    public function generateQR()
+    public function generateQR($user = null)
     {
+        //if $user == null, then it will generate QR code for current user
+        //if $user != null, then it will generate QR code for that user
+
         $user = Auth::user();
         $data = [
             'user_id' => $user->id,
