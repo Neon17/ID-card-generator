@@ -37,7 +37,8 @@
                     @elseif ($type === 'id-card')
                         <div class="w-full rounded-lg shadow border border-gray-200 p-6">
                             <h3 class="text-2xl font-semibold text-white mb-6">User Details</h3>
-                            <img src="{{ asset('storage/photos/'. $data['photo'])}}" class="m-2 w-20 h-full object-cover" alt="Employee Photo">
+                            <img src="{{ asset('storage/photos/' . $data['photo']) }}"
+                                class="m-2 w-20 h-full object-cover" alt="Employee Photo">
                             <div class="mt-2 grid grid-cols-2 md:grid-cols-2 gap-6">
                                 @foreach (['name', 'email', 'address', 'dob', 'department', 'role'] as $field)
                                     <div class="space-y-1 {{ in_array($field, ['address']) ? 'md:col-span-2' : '' }}">
@@ -57,6 +58,19 @@
                             @foreach ($data as $key => $value)
                                 <div class="mb-2">
                                     <strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ $value }}
+                                </div>
+                            @endforeach
+                        </div>
+                    @elseif ($type === 'guest')
+                        <div class="bg-black text-white p-4 rounded-lg shadow border border-gray-200">
+                            <h3 class="text-xl font-semibold mb-3">Non-registered User</h3>
+                            <img src="{{ asset('storage/tmp/' . $data['photoName']) }}"
+                                class="m-2 w-20 h-full object-cover mt-4 mb-3" alt="Employee Photo">
+                            @foreach ($data as $key => $value)
+                                <div class="mb-2">
+                                    @if($key!= 'photoName')
+                                        <strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ $value }}
+                                    @endif
                                 </div>
                             @endforeach
                         </div>

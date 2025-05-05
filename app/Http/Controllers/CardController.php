@@ -33,7 +33,7 @@ class CardController extends Controller
         $extension = $photo->getClientOriginalExtension();
         $randomName = Str::random(10) . '_' . time() . '.' . $extension;
 
-        $photo->storeAs('tmp', $randomName, 'public'); 
+        $photo->storeAs('tmp', $randomName, 'public');
 
         return $this->printCardAnonymous([
             'name' => $request->name,
@@ -41,6 +41,7 @@ class CardController extends Controller
             'department' => $request->department,
             'dob' => $request->dob,
             'photo' => asset('storage/tmp/' . $randomName),
+            'photoName' => $randomName,
         ]);
 
         return view('currently_working');
@@ -130,12 +131,15 @@ class CardController extends Controller
 
         $cardDetails =  $this->basicCardDetails();
 
-
+        $expiryDate = now()->addYears($cardDetails['card_duration'])->format('M Y');
+        if (!array_key_exists('expiryDate', $user)) {
+            $user['expiryDate'] = $expiryDate;
+        }
         // Convert QR code to base64 for embedding in HTML
-        $rawQRCode = $this->generateQR();
+        $rawQRCode = $this->generateQR($user);
         $qrCode = $this->transformQR($rawQRCode);
 
-        $id = 'ACME-2025' . (int) now()->diffInMinutes(now()->copy()->startOfDay());
+        $id = 'ACME-2025-' . now()->timestamp;
         $duration = ($cardDetails['card_duration']) ? $cardDetails['card_duration'] : 5;
 
         $user = [
@@ -370,12 +374,14 @@ class CardController extends Controller
             case 'id-card':
                 $jsonString = $request->query('data');
                 $data = json_decode($jsonString, true);
-                $user = User::select('id', 'name', 'email', 'address', 'photo', 'dob', 'department', 'isAdmin')
-                    ->where('id', $data['user_id'])
-                    ->first()
-                    ->toArray();
-
-                $data = $user;
+                if ($data['user_id'] != 'guest') {
+                    $user = User::select('id', 'name', 'email', 'address', 'photo', 'dob', 'department', 'isAdmin')
+                        ->where('id', $data['user_id'])
+                        ->first()
+                        ->toArray();
+                    $data = $user;
+                }
+                else $type = 'guest';
                 break;
 
             case 'json':
@@ -402,7 +408,27 @@ class CardController extends Controller
     {
         //if $user == null, then it will generate QR code for current user
         //if $user != null, then it will generate QR code for that user
+        if ($user != null) {
+            $data = [
+                'user_id' => 'guest',
+                'message' => 'Scan this QR code for verification',
+                'name' => $user['name'],
+                'address' => $user['address'],
+                'department' => $user['department'],
+                'dob' => $user['dob'],
+                'photoName' => $user['photoName'],
+                'expiryDate' => $user['expiryDate'],
+            ];
 
+            $qrCode = QrCode::size(400)
+                ->margin(4)
+                ->errorCorrection('H') // High error correction
+                ->backgroundColor(255, 255, 255)
+                ->color(0, 0, 0)
+                ->generate(json_encode($data));
+
+            return $qrCode;
+        }
         $user = Auth::user();
         $data = [
             'user_id' => $user->id,
