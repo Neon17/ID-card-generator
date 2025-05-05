@@ -54,7 +54,10 @@
                         facingMode: "environment"
                     }, {
                         fps: 10,
-                        qrbox: { width: 300, height: 300 }
+                        qrbox: {
+                            width: 300,
+                            height: 300
+                        }
                     },
                     onScanSuccess
                 );
@@ -66,15 +69,15 @@
 
             const file = e.target.files[0];
 
-            html5QrCode.scanFile(file, true)
-                .then(decodedText => {
-                    document.getElementById('scanned-result').innerText = decodedText;
-                    // Optional backend call
-                })
-                .catch(err => {
-                    alert("QR Code not found in image.");
-                    console.error(err);
-                });
+            html5QrCode.stop().then(() => {
+                return html5QrCode.scanFile(file, true);
+            }).then(decodedText => {
+                document.getElementById('scanned-result').innerText = decodedText;
+                redirectToBackend(decodedText); // ✅ Redirect after successful file scan
+            }).catch(err => {
+                alert("QR Code not found in image or failed to stop camera.");
+                console.error(err);
+            });
         });
     </script>
 </body>
